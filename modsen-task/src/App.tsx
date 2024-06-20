@@ -1,4 +1,3 @@
-import './App.css'
 import {Main} from "./Pages/Main/Main.tsx";
 
 function App() {

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+import { MapContainer } from "../../Pages/Main/Main.styles";
+import { Filter } from "../Filter/Filter";
+import {WideContainer} from "../../constants/blocks/Blocks.ts";
 
 const mapContainerStyle = {
-    width: '100vw',
-    height: '100vh',
+    width: '50%',
+    height: '50vh',
 };
 
-const center = {
+const defaultCenter = {
     lat: 53.89148473951982,
     lng: 27.56005834796063,
 };
@@ -28,9 +31,14 @@ interface Place {
     };
 }
 
-export const Map : React.FC = () => {
+export const Map: React.FC = () => {
+    const [zoomValue, setZoomValue] = useState<number>(14);
+    const [radius, setRadius] = useState<number>(1000);
+    const [buildingType, setBuildingType] = useState("museum");
+    const [currentPlace, setCurrentPlace] = useState<Place>();
+
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyASakd9_-V0Sl-hfufvhF_MFhe0SDnITB0', // Убедитесь, что заменили на ваш API ключ
+        googleMapsApiKey: 'AIzaSyASakd9_-V0Sl-hfufvhF_MFhe0SDnITB0',
         libraries: ['places'],
     });
 
@@ -43,9 +51,9 @@ export const Map : React.FC = () => {
             );
 
             const request = {
-                location: center,
-                radius: '1000',
-                type: 'museum',
+                location: defaultCenter,
+                radius: radius,
+                type: buildingType,
             };
 
             service.nearbySearch(request, (results: Place[], status: google.maps.places.PlacesServiceStatus) => {
@@ -54,41 +62,64 @@ export const Map : React.FC = () => {
                 }
             });
         }
-    }, [isLoaded]);
+    }, [isLoaded, buildingType]);
+
+    const ShowCurrentPlace = (place) => {
+        setCurrentPlace(place);
+        setZoomValue(20);
+    }
+    const handleFilter = (selectedCategory: string) => {
+        setBuildingType(selectedCategory);
+    };
 
     if (loadError) return <div>Ошибка загрузки карты</div>;
     if (!isLoaded) return <div>Загрузка карты...</div>;
+
     console.log(places);
+
     return (
-        <div>
-            <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                zoom={16}
-                center={center}
-                options={options}
-            >
-                {places.map((place, index) => (
-                    <Marker
-                        icon={{
-                            url: place.photos && place.photos[0].getUrl({ maxWidth: 50, maxHeight: 50 }),
-                            scaledSize: new window.google.maps.Size(50, 50),
-                        }}
-                        key={index}
-                        position={{
-                            lat: place.geometry.location.lat(),
-                            lng: place.geometry.location.lng(),
-                        }}
-                    />
-                ))}
-            </GoogleMap>
-            <div>
-                <h2>Музеи в радиусе 1 км</h2>
-                <ul>
+        <WideContainer>
+            <Filter onFilter={handleFilter} />
+            <MapContainer>
+                <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={zoomValue}
+                    center={
+                        currentPlace
+                            ? {
+                                lat: currentPlace.geometry.location.lat(),
+                                lng: currentPlace.geometry.location.lng(),
+                            }
+                            : defaultCenter
+                    }
+                    options={options}
+                >
                     {places.map((place, index) => (
-                        <li key={index}>{place.name}</li>
+                        <Marker
+                            icon={{
+                                url: place.photos && place.photos[0].getUrl({ maxWidth: 50, maxHeight: 50 }),
+                                scaledSize: new window.google.maps.Size(50, 50),
+                            }}
+                            key={index}
+                            position={{
+                                lat: place.geometry.location.lat(),
+                                lng: place.geometry.location.lng(),
+                            }}
+                        />
                     ))}
-                </ul>
-            </div>
-        </div>
+                </GoogleMap>
+                <div style={{maxWidth: '45%'}}>
+                    <h2>Музеи в радиусе 1 км</h2>
+                    <ul>
+                        {places.map((place, index) => (
+                            <li key={index}>
+                                {place.name}
+                                <button onClick={() => ShowCurrentPlace(place)}>На карте</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </MapContainer>
+        </WideContainer>
     );
 }
