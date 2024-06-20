@@ -1,13 +1,12 @@
 import './App.css'
-import { Account } from './constants/Pages/Account/Account'
+import {Main} from "./Pages/Main/Main.tsx";
 
 function App() {
 
-
-  return (
-    <>
-      <Account/>
-    </>
+    return (
+        <>
+            <Main/>
+        </>
   )
 }
 
