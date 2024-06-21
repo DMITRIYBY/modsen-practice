@@ -26,6 +26,7 @@ export const Filter: React.FC<FilterProps> = ({ onFilter }) => {
                 value={selectedCategory}
                 onChange={handleSelectChange}
             >
+                <option value="">Все</option>
                 <option value="point_of_interest">Интересные места</option>
                 <option value="museum">Музеи</option>
                 <option value="park">Парки</option>

@@ -3,11 +3,15 @@ import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 import { MapContainer } from "../../Pages/Main/Main.styles";
 import { Filter } from "../Filter/Filter";
 import {WideContainer} from "../../constants/blocks/Blocks.ts";
+import {mapStyles} from "./Map.styles.ts";
+import useGeolocation from "../../Hooks/Geolocation.ts";
+import {PlacesList} from "../PlacesList/PlacesList.tsx";
 
 const mapContainerStyle = {
-    width: '50%',
-    height: '50vh',
+    width: '100%',
+    height: '100lvh',
 };
+
 
 const defaultCenter = {
     lat: 53.89148473951982,
@@ -17,6 +21,7 @@ const defaultCenter = {
 const options = {
     disableDefaultUI: true,
     zoomControl: true,
+    styles: mapStyles
 };
 
 interface Place {
@@ -32,9 +37,10 @@ interface Place {
 }
 
 export const Map: React.FC = () => {
+    const { latitude, longitude, error } = useGeolocation();
     const [zoomValue, setZoomValue] = useState<number>(14);
     const [radius, setRadius] = useState<number>(1000);
-    const [buildingType, setBuildingType] = useState("museum");
+    const [buildingType, setBuildingType] = useState("");
     const [currentPlace, setCurrentPlace] = useState<Place>();
 
     const { isLoaded, loadError } = useLoadScript({
@@ -79,7 +85,8 @@ export const Map: React.FC = () => {
 
     return (
         <WideContainer>
-            <Filter onFilter={handleFilter} />
+            {/*<Filter onFilter={handleFilter} />*/}
+            <PlacesList places={places} onSelect={setCurrentPlace} onZoom={setZoomValue} onFilter={handleFilter}/>
             <MapContainer>
                 <GoogleMap
                     mapContainerStyle={mapContainerStyle}
@@ -108,17 +115,17 @@ export const Map: React.FC = () => {
                         />
                     ))}
                 </GoogleMap>
-                <div style={{maxWidth: '45%'}}>
-                    <h2>Музеи в радиусе 1 км</h2>
-                    <ul>
-                        {places.map((place, index) => (
-                            <li key={index}>
-                                {place.name}
-                                <button onClick={() => ShowCurrentPlace(place)}>На карте</button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {/*<div style={{maxWidth: '45%'}}>*/}
+                {/*    <h2>Музеи в радиусе 1 км</h2>*/}
+                {/*    <ul>*/}
+                {/*        {places.map((place, index) => (*/}
+                {/*            <li key={index}>*/}
+                {/*                {place.name}*/}
+                {/*                <button onClick={() => ShowCurrentPlace(place)}>На карте</button>*/}
+                {/*            </li>*/}
+                {/*        ))}*/}
+                {/*    </ul>*/}
+                {/*</div>*/}
             </MapContainer>
         </WideContainer>
     );
