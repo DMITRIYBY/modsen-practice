@@ -1,29 +1,31 @@
 import React, {useState} from "react";
-import {BorderedBlackSelect, FilterContainer} from "./Filter.styles.ts";
-import {BorderedBlackButton} from "../../constants/buttons/Buttons.ts";
-import {TextBlack18px} from "../../constants/fonts/Fonts.ts";
+import { BorderedBlackSelect, FilterContainer } from "./Filter.styles.ts";
+import { BorderedBlackButton } from "../../constants/buttons/Buttons.ts";
+import { TextBlack18px } from "../../constants/fonts/Fonts.ts";
+import { useSelector, useDispatch } from 'react-redux';
+import { setFilter } from "../../store/reducers/filterSlice.ts";
+// @ts-ignore
+import { RootState } from '../app/store';
 
-interface FilterProps {
-    onFilter: (selectedCategory: string) => void;
-}
-
-export const Filter: React.FC<FilterProps> = ({ onFilter }) => {
-    const [selectedCategory, setSelectedCategory] = useState<string>('point_of_interest');
+export const Filter = () => {
+    const dispatch = useDispatch();
+    const [buildingType, setBuildingType] = useState(useSelector((state : RootState) => state.filter.buildingType));
+    const [radius, setRadius] = useState(useSelector((state : RootState) => state.filter.radius));
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedCategory(event.target.value);
+        setBuildingType(event.target.value);
+        setRadius('1000');
     };
 
     const handleButtonClick = () => {
-        onFilter(selectedCategory);
-        console.log(selectedCategory)
+        dispatch(setFilter({ buildingType, radius }));
     };
 
     return (
         <FilterContainer>
             <BorderedBlackSelect
                 name={'category'}
-                value={selectedCategory}
+                value={buildingType}
                 onChange={handleSelectChange}
             >
                 <option value="">Все</option>

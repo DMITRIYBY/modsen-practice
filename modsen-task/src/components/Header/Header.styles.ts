@@ -15,6 +15,7 @@ export const HeaderContainer = styled.header`
     border-bottom: 1px solid grey;
     box-shadow: 0px 3px 2px 2px rgba(0, 0, 0, 0.1); 
     margin-bottom: 10px;
+    border-right: 3px solid rgba(0,0,0,0.3);
 `;
 
 export const HeaderFix = styled.div`

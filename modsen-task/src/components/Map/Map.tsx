@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 import { MapContainer } from "../../Pages/Main/Main.styles";
-import { Filter } from "../Filter/Filter";
-import {WideContainer} from "../../constants/blocks/Blocks.ts";
-import {mapStyles} from "./Map.styles.ts";
-import useGeolocation from "../../Hooks/Geolocation.ts";
-import {PlacesList} from "../PlacesList/PlacesList.tsx";
+import { WideContainer } from "../../constants/blocks/Blocks.ts";
+import { mapStyles } from "./Map.styles.ts";
+import { useSelector } from 'react-redux';
+// @ts-ignore
+import { RootState } from '../app/store';
 
 const mapContainerStyle = {
     width: '100%',
-    height: '100lvh',
+    height: '100vh',
 };
-
 
 const defaultCenter = {
     lat: 53.89148473951982,
@@ -21,7 +20,7 @@ const defaultCenter = {
 const options = {
     disableDefaultUI: true,
     zoomControl: true,
-    styles: mapStyles
+    styles: mapStyles,
 };
 
 interface Place {
@@ -37,19 +36,15 @@ interface Place {
 }
 
 export const Map: React.FC = () => {
-    const { latitude, longitude, error } = useGeolocation();
     const [zoomValue, setZoomValue] = useState<number>(14);
-    const [radius, setRadius] = useState<number>(1000);
-    const [buildingType, setBuildingType] = useState("");
     const [currentPlace, setCurrentPlace] = useState<Place>();
+    const [places, setPlaces] = useState<Place[]>([]);
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: 'AIzaSyASakd9_-V0Sl-hfufvhF_MFhe0SDnITB0',
         libraries: ['places'],
     });
-
-    const [places, setPlaces] = useState<Place[]>([]);
-
+    // console.log(useSelector(state => state.filter.buildingType).length, useSelector(state => state.filter.radius))
     useEffect(() => {
         if (isLoaded) {
             const service = new window.google.maps.places.PlacesService(
@@ -58,35 +53,33 @@ export const Map: React.FC = () => {
 
             const request = {
                 location: defaultCenter,
-                radius: radius,
-                type: buildingType,
+                radius: 1000,
+                type: ""
             };
-
+            // @ts-ignore
             service.nearbySearch(request, (results: Place[], status: google.maps.places.PlacesServiceStatus) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
                     setPlaces(results);
+                } else {
+                    console.error('Ошибка при запросе мест:', status);
                 }
             });
         }
-    }, [isLoaded, buildingType]);
+    }, [isLoaded, useSelector((state: RootState) => state.filter.buildingType), useSelector((state: RootState) => state.filter.radius)]);
 
-    const ShowCurrentPlace = (place) => {
-        setCurrentPlace(place);
-        setZoomValue(20);
-    }
-    const handleFilter = (selectedCategory: string) => {
-        setBuildingType(selectedCategory);
-    };
+    useEffect(() => {
+
+        if (currentPlace) {
+            setZoomValue(16);
+        }
+    }, [currentPlace]);
 
     if (loadError) return <div>Ошибка загрузки карты</div>;
     if (!isLoaded) return <div>Загрузка карты...</div>;
 
-    console.log(places);
-
+    // @ts-ignore
     return (
         <WideContainer>
-            {/*<Filter onFilter={handleFilter} />*/}
-            <PlacesList places={places} onSelect={setCurrentPlace} onZoom={setZoomValue} onFilter={handleFilter}/>
             <MapContainer>
                 <GoogleMap
                     mapContainerStyle={mapContainerStyle}
@@ -103,30 +96,20 @@ export const Map: React.FC = () => {
                 >
                     {places.map((place, index) => (
                         <Marker
-                            icon={{
-                                url: place.photos && place.photos[0].getUrl({ maxWidth: 50, maxHeight: 50 }),
-                                scaledSize: new window.google.maps.Size(50, 50),
-                            }}
                             key={index}
                             position={{
                                 lat: place.geometry.location.lat(),
                                 lng: place.geometry.location.lng(),
                             }}
+                            icon={{
+                                url: place.photos && place.photos.length > 0 ? place.photos[0]?.getURI({ maxWidth: 50, maxHeight: 50 }) as string : '',
+                                scaledSize: new window.google.maps.Size(50, 50),
+                            }}
+                            onClick={() => setCurrentPlace(place)}
                         />
                     ))}
                 </GoogleMap>
-                {/*<div style={{maxWidth: '45%'}}>*/}
-                {/*    <h2>Музеи в радиусе 1 км</h2>*/}
-                {/*    <ul>*/}
-                {/*        {places.map((place, index) => (*/}
-                {/*            <li key={index}>*/}
-                {/*                {place.name}*/}
-                {/*                <button onClick={() => ShowCurrentPlace(place)}>На карте</button>*/}
-                {/*            </li>*/}
-                {/*        ))}*/}
-                {/*    </ul>*/}
-                {/*</div>*/}
             </MapContainer>
         </WideContainer>
     );
-}
+};
