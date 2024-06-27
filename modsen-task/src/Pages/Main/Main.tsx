@@ -1,6 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
-import {Map} from "../../components/Map/Map.tsx";
-import {HeaderFix} from "../../components/Header/Header.styles.ts";
+import {Map} from "../../components/Map/Map";
+import {HeaderFix} from "../../components/Header/Header.styles";
 
 export const Main = () => {
     return(

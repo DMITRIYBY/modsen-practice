@@ -1,4 +1,4 @@
-import {GreyStroke, HeaderContainer, IconicButton} from "./Header.styles.ts";
+import {GreyStroke, HeaderContainer, IconicButton} from "./Header.styles";
 // import {H1Black} from "../../constants/fonts/Fonts.ts";
 import {NavLink} from "react-router-dom";
 import mappieLogo from "../../assets/icons/mappieLogo.svg";

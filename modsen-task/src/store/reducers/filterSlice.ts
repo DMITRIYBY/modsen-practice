@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {FilterState} from "../../constants/types/redux.types.ts";
+import {FilterState} from "../../constants/types/redux.types";
 
 const initialState: FilterState = {
     buildingType: '',

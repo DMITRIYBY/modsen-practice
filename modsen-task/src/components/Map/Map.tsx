@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 import { MapContainer } from "../../Pages/Main/Main.styles";
-import { WideContainer } from "../../constants/blocks/Blocks.ts";
-import { mapStyles } from "./Map.styles.ts";
+import { WideContainer } from "../../constants/blocks/Blocks";
+import { mapStyles } from "./Map.styles";
 import { useSelector } from 'react-redux';
-// @ts-ignore
+//@ts-ignore
 import { RootState } from '../app/store';
 
 const mapContainerStyle = {
@@ -23,38 +23,28 @@ const options = {
     styles: mapStyles,
 };
 
-interface Place {
-    photo: any;
-    name: string;
-    photos?: google.maps.places.Photo[];
-    geometry: {
-        location: {
-            lat: () => number;
-            lng: () => number;
-        };
-    };
-}
-
 export const Map: React.FC = () => {
+    const filters = useSelector((state : RootState) => state.filter);
+
     const [zoomValue, setZoomValue] = useState<number>(14);
     const [currentPlace, setCurrentPlace] = useState<Place>();
     const [places, setPlaces] = useState<Place[]>([]);
 
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyASakd9_-V0Sl-hfufvhF_MFhe0SDnITB0',
+        googleMapsApiKey: 'AIzaSyAolfS_257dQALVWlt3TGxcUNJYMKszpe4',
         libraries: ['places'],
     });
-    // console.log(useSelector(state => state.filter.buildingType).length, useSelector(state => state.filter.radius))
+
     useEffect(() => {
         if (isLoaded) {
-            const service = new window.google.maps.places.PlacesService(
+            const service = new google.maps.places.PlacesService(
                 document.createElement('div')
             );
 
-            const request = {
+            let request = {
                 location: defaultCenter,
-                radius: 1000,
-                type: ""
+                radius: filters.radius,
+                type: [filters.buildingType]
             };
             // @ts-ignore
             service.nearbySearch(request, (results: Place[], status: google.maps.places.PlacesServiceStatus) => {
@@ -65,7 +55,9 @@ export const Map: React.FC = () => {
                 }
             });
         }
-    }, [isLoaded, useSelector((state: RootState) => state.filter.buildingType), useSelector((state: RootState) => state.filter.radius)]);
+
+        console.log(places)
+    }, [isLoaded, filters]);
 
     useEffect(() => {
 
@@ -77,7 +69,6 @@ export const Map: React.FC = () => {
     if (loadError) return <div>Ошибка загрузки карты</div>;
     if (!isLoaded) return <div>Загрузка карты...</div>;
 
-    // @ts-ignore
     return (
         <WideContainer>
             <MapContainer>
@@ -101,12 +92,15 @@ export const Map: React.FC = () => {
                                 lat: place.geometry.location.lat(),
                                 lng: place.geometry.location.lng(),
                             }}
-                            icon={{
-                                url: place.photos && place.photos.length > 0 ? place.photos[0]?.getURI({ maxWidth: 50, maxHeight: 50 }) as string : '',
-                                scaledSize: new window.google.maps.Size(50, 50),
-                            }}
+                            // icon={{
+                            //     url: place.photos && place.photos.length > 0 && typeof place.photos[0].getURI === 'function'
+                            //         ? place.photos[0].getURI({ maxWidth: 50, maxHeight: 50 })
+                            //         : '',
+                            //     scaledSize: new window.google.maps.Size(50, 50),
+                            // }}
                             onClick={() => setCurrentPlace(place)}
                         />
+
                     ))}
                 </GoogleMap>
             </MapContainer>

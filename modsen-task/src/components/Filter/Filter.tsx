@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import { BorderedBlackSelect, FilterContainer } from "./Filter.styles.ts";
-import { BorderedBlackButton } from "../../constants/buttons/Buttons.ts";
-import { TextBlack18px } from "../../constants/fonts/Fonts.ts";
+import { BorderedBlackSelect, FilterContainer } from "./Filter.styles";
+import { BorderedBlackButton } from "../../constants/buttons/Buttons";
+import { TextBlack18px } from "../../constants/fonts/Fonts";
 import { useSelector, useDispatch } from 'react-redux';
-import { setFilter } from "../../store/reducers/filterSlice.ts";
+import { setFilter } from "../../store/reducers/filterSlice";
 // @ts-ignore
 import { RootState } from '../app/store';
 
@@ -28,7 +28,7 @@ export const Filter = () => {
                 value={buildingType}
                 onChange={handleSelectChange}
             >
-                <option value="">Все</option>
+                {/*<option value="">Все</option>*/}
                 <option value="point_of_interest">Интересные места</option>
                 <option value="museum">Музеи</option>
                 <option value="park">Парки</option>

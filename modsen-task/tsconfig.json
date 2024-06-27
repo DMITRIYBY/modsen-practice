@@ -4,7 +4,7 @@
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "skipLibCheck": true,
+    "skipLibCheck": false,
 
     /* Bundler mode */
     "moduleResolution": "node",
@@ -21,7 +21,7 @@
     "allowSyntheticDefaultImports": true,
 
     /* Types */
-    "types": ["react-redux", "react-router-dom", "@react-google-maps/api", "firebase", "@reduxjs/toolkit"]
+    "types": ["react-redux",  "react-router-dom", "@react-google-maps/api", "@reduxjs/toolkit"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

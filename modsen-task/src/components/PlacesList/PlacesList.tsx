@@ -1,5 +1,5 @@
-import {PlaceCard, PlaceMineature, PlacesListContainer} from "./PlacesList.styles.ts";
-import {TextBlack18px} from "../../constants/fonts/Fonts.ts";
+import {PlaceCard, PlaceMineature, PlacesListContainer} from "./PlacesList.styles";
+import {TextBlack18px} from "../../constants/fonts/Fonts";
 
 interface Place {
     geometry: {
