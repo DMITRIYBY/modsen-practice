@@ -1,5 +1,9 @@
-import {PlaceCard, PlaceMineature, PlacesListContainer} from "./PlacesList.styles";
-import {TextBlack18px} from "../../constants/fonts/Fonts";
+import { PlaceCard, PlaceMineature, PlacesListContainer } from "./PlacesList.styles";
+import { TextBlack18px } from "../../constants/fonts/Fonts";
+import { useSelector } from "react-redux";
+//@ts-ignore
+import { RootState } from '../app/store';
+import { useEffect, useState } from "react";
 
 interface Place {
     geometry: {
@@ -11,34 +15,30 @@ interface Place {
     name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined;
 }
 
+export const PlacesList = () => {
+    const placesList = useSelector((state: RootState) => state.places.places);
+    const [places, setPlaces] = useState<Place[]>([]);
 
-interface PlacesListProps {
-    places: any,
-    // onSelect: any,
-    // onZoom: any,
-    // onFilter: any
-};
+    useEffect(() => {
+        if (Array.isArray(placesList)) {
+            setPlaces(placesList);
+        } else {
+            console.error('placesList is not an array', placesList);
+        }
+    }, [placesList]);
 
-export const PlacesList: React.FC<PlacesListProps>  = ({places}) => {
-
-    // const ShowCurrentPlace = (place: Place) => {
-    //     // onSelect(place);
-    //     // onZoom(20);
-    // }
-
-    return(
-        <PlacesListContainer isShow={true} width={'30%'} key={places.length}>
-                    {places.map((place: Place) => (
-                        <PlaceCard key={place.geometry.lat}>
-                            <PlaceMineature>
-                                <img src={place.photos && place.photos[0].getUrl({ maxWidth: 400, maxHeight: 100 })}/>
-                            </PlaceMineature>
-                            <TextBlack18px>
-                                {place.name}
-                            </TextBlack18px>
-                            {/*<button onClick={() => ShowCurrentPlace(place)}>На карте</button>*/}
-                        </PlaceCard>
-                    ))}
+    return (
+        <PlacesListContainer width={'90%'} key={places.length}>
+            {places.map((place: Place) => (
+                <PlaceCard key={place.geometry.lat}>
+                    <PlaceMineature>
+                        <img src={place.photos && place.photos[0].getUrl({ maxWidth: 400, maxHeight: 100 })} />
+                    </PlaceMineature>
+                    <TextBlack18px>
+                        {place.name}
+                    </TextBlack18px>
+                </PlaceCard>
+            ))}
         </PlacesListContainer>
     );
 }

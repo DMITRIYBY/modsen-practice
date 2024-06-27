@@ -1,12 +1,12 @@
 import { Fragment } from "react/jsx-runtime";
-import {Map} from "../../components/Map/Map";
-import {HeaderFix} from "../../components/Header/Header.styles";
+import {Filter} from "../../components/Filter/Filter";
+import {PlacesList} from "../../components/PlacesList/PlacesList";
 
 export const Main = () => {
     return(
         <Fragment>
-            <HeaderFix />
-            <Map />
+            <Filter />
+            <PlacesList />
         </Fragment>
     );
 }

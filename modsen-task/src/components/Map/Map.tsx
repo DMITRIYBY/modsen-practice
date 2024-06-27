@@ -3,9 +3,10 @@ import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 import { MapContainer } from "../../Pages/Main/Main.styles";
 import { WideContainer } from "../../constants/blocks/Blocks";
 import { mapStyles } from "./Map.styles";
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 //@ts-ignore
 import { RootState } from '../app/store';
+import {setPlacesList} from "../../store/reducers/placesSlice";
 
 const mapContainerStyle = {
     width: '100%',
@@ -25,6 +26,7 @@ const options = {
 
 export const Map: React.FC = () => {
     const filters = useSelector((state : RootState) => state.filter);
+    const dispatch = useDispatch();
 
     const [zoomValue, setZoomValue] = useState<number>(14);
     const [currentPlace, setCurrentPlace] = useState<Place>();
@@ -50,14 +52,16 @@ export const Map: React.FC = () => {
             service.nearbySearch(request, (results: Place[], status: google.maps.places.PlacesServiceStatus) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
                     setPlaces(results);
+                    dispatch(setPlacesList(results));
                 } else {
                     console.error('Ошибка при запросе мест:', status);
                 }
             });
+
         }
 
-        console.log(places)
     }, [isLoaded, filters]);
+
 
     useEffect(() => {
 

@@ -9,7 +9,7 @@ import {Login} from "./Pages/Login/Login";
 import {Favorites} from "./Pages/Favorites/Favorites";
 import {HeaderFix} from "./components/Header/Header.styles";
 import "./App.css";
-import {Filter} from "./components/Filter/Filter";
+import {Main} from "./Pages/Main/Main";
 
 // import {Login} from "./Pages/Login/Login.tsx";
 
@@ -32,7 +32,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<div></div>} />
                             <Route path="/login" element={<Login />} />
-                            <Route path="/search" element={<Filter />} />
+                            <Route path="/search" element={<Main />} />
                             <Route path="/favorites" element={<Favorites />} />
                         </Routes>
                 {/*    </CSSTransition>*/}

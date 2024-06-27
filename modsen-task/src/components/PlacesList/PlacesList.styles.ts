@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export const PlacesListContainer = styled.div<{isShow: boolean, width: string}>` 
+export const PlacesListContainer = styled.div<{width: string}>` 
     z-index: 1000;
-    position: fixed;
-    display: ${props => (props.isShow ? 'flex' : 'none')};
+    position: relative;
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -11,9 +11,16 @@ export const PlacesListContainer = styled.div<{isShow: boolean, width: string}>`
     height: 100lvh;
     padding: 20px;
     gap: 20px;
-    margin-left: 120px;
     background: white;
     overflow-y: auto;
+
+  
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+
+  &::-webkit-scrollbar {
+    display: none; 
+  }
 `;
 
 export const PlaceCard = styled.div`
