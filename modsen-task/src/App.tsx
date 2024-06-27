@@ -2,8 +2,8 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import {Header} from "./components/Header/Header";
 import {InteractiveContainer} from "./components/InteractiveContainer/InteractiveContainer.styles";
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import {Routes, Route, useLocation} from "react-router-dom";
+// import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import {Routes, Route} from "react-router-dom";
 import {Map} from "./components/Map/Map";
 import {Login} from "./Pages/Login/Login";
 import {Favorites} from "./Pages/Favorites/Favorites";
@@ -15,7 +15,7 @@ import {Filter} from "./components/Filter/Filter";
 
 
 function App() {
-    const location = useLocation();
+    // const location = useLocation();
 
     return (
         <Provider store={store}>
@@ -23,20 +23,20 @@ function App() {
             {/*<Login />*/}
             <InteractiveContainer>
                 <HeaderFix/>
-                <TransitionGroup>
-                    <CSSTransition
-                        key={location.key}
-                        classNames="swipe"
-                        timeout={300} // время анимации в миллисекундах
-                    >
+                {/*<TransitionGroup>*/}
+                    {/*<CSSTransition*/}
+                    {/*    key={location.key}*/}
+                    {/*    classNames="swipe"*/}
+                    {/*    timeout={300} // время анимации в миллисекундах*/}
+                    {/*>*/}
                         <Routes>
                             <Route path="/" element={<div></div>} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/search" element={<Filter />} />
                             <Route path="/favorites" element={<Favorites />} />
                         </Routes>
-                    </CSSTransition>
-                </TransitionGroup>
+                {/*    </CSSTransition>*/}
+                {/*</TransitionGroup>*/}
             </InteractiveContainer>
             <Map />
         </Provider>
