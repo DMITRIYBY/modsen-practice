@@ -2,8 +2,7 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import {Header} from "./components/Header/Header";
 import {InteractiveContainer} from "./components/InteractiveContainer/InteractiveContainer.styles";
-// @ts-ignore
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import {Routes, Route, useLocation} from "react-router-dom";
 import {Map} from "./components/Map/Map";
 import {Login} from "./Pages/Login/Login";
