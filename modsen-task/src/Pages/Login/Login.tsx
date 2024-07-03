@@ -22,6 +22,7 @@ export const Login = () => {
         signInUser(login, password)
             .then((userCredential) => {
                 const user = userCredential.user;
+                //@ts-ignore
                 dispatch(setUser({ email: user.email ? user.email : '' , token: user.accessToken, id: user.uid }));
                 navigate("/")
             })

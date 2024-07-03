@@ -26,6 +26,7 @@ export const Register = () => {
                 const userCredential = await createUser(login, password);
 
                 const user = userCredential.user;
+                //@ts-ignore
                 dispatch(setUser({ email: user.email ? user.email : '' , token: user.accessToken, id: user.uid }));
                 navigate("/")
             } catch (error) {
