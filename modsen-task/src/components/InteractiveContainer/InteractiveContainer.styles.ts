@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export const InteractiveContainer = styled.div`
+export const InteractiveContainer = styled.div<{isShow: boolean}>`
       position: fixed;
       z-index: 1000;
-      display: flex;
+      display: ${(props) => (props.isShow ? 'flex' : 'none')};
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
@@ -12,4 +12,12 @@ export const InteractiveContainer = styled.div`
       padding: 20px;
       margin-left: 103px;
       background: white;
+  
+      @media(max-width: 1024px) {
+        width: 50%;
+      }
+
+      @media(max-width: 680px) {
+        width: 70% ;
+      }
 `;

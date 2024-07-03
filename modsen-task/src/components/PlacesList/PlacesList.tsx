@@ -1,9 +1,9 @@
 import { PlaceCard, PlaceMineature, PlacesListContainer } from "./PlacesList.styles";
 import { TextBlack18px } from "../../constants/fonts/Fonts";
-import { useSelector } from "react-redux";
 //@ts-ignore
 import { RootState } from '../app/store';
 import { useEffect, useState } from "react";
+import {useTypedSelector} from "../../Hooks/useTypedSelector";
 
 interface Place {
     geometry: {
@@ -16,7 +16,7 @@ interface Place {
 }
 
 export const PlacesList = () => {
-    const placesList = useSelector((state: RootState) => state.places.places);
+    const placesList = useTypedSelector((state) => state.places.places);
     const [places, setPlaces] = useState<Place[]>([]);
 
     useEffect(() => {

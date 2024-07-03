@@ -2,15 +2,16 @@ import React, {useState} from "react";
 import { BorderedBlackSelect, FilterContainer } from "./Filter.styles";
 import { BorderedBlackButton } from "../../constants/buttons/Buttons";
 import { TextBlack18px } from "../../constants/fonts/Fonts";
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setFilter } from "../../store/reducers/filterSlice";
 // @ts-ignore
 import { RootState } from '../app/store';
+import {useTypedSelector} from "../../Hooks/useTypedSelector";
 
 export const Filter = () => {
     const dispatch = useDispatch();
-    const [buildingType, setBuildingType] = useState(useSelector((state : RootState) => state.filter.buildingType));
-    const [radius, setRadius] = useState(useSelector((state : RootState) => state.filter.radius));
+    const [buildingType, setBuildingType] = useState(useTypedSelector((state) => state.filter.buildingType));
+    const [radius, setRadius] = useState(useTypedSelector((state) => state.filter.radius));
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setBuildingType(event.target.value);

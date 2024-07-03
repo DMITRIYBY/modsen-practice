@@ -1,17 +1,30 @@
 import {GreyStroke, HeaderContainer, IconicButton} from "./Header.styles";
-// import {H1Black} from "../../constants/fonts/Fonts.ts";
 import {NavLink} from "react-router-dom";
 import mappieLogo from "../../assets/icons/mappieLogo.svg";
 import searchIcon from "../../assets/icons/searchIcon.svg";
 import favoritesIcon from "../../assets/icons/favoritesIcon.svg";
+import userIcon from "../../assets/icons/userIcon.svg";
+import logoutIcon from "../../assets/icons/logoutIcon.svg";
+import {useAuth} from "../../Hooks/useAuth";
+import {InvisibleButton} from "../../constants/buttons/Buttons";
+import {useDispatch} from "react-redux";
+import {clearUser} from "../../store/reducers/userSlice";
 
 export const Header = () => {
+    const dispatch = useDispatch();
+
+    const {isAuth} = useAuth();
+
+    const handleLogout = () => {
+        dispatch(clearUser());
+    }
+
 
     return(
         <HeaderContainer>
             <img src={mappieLogo}/>
             <GreyStroke/>
-            <NavLink to='/search'>
+            <NavLink to='/'>
                 <IconicButton color={'#5E7BC7'}>
                     <img src={searchIcon}/>
                 </IconicButton>
@@ -21,9 +34,9 @@ export const Header = () => {
                     <img src={favoritesIcon} />
                 </IconicButton>
             </NavLink>
-            {/*<Link to={'/'}>*/}
-            {/*    <H1Black>Главная</H1Black>*/}
-            {/*</Link>*/}
+            <InvisibleButton onClick={handleLogout}>
+                {isAuth ? (<img src={logoutIcon} />) : (<img src={userIcon} />)}
+            </InvisibleButton>
         </HeaderContainer>
     );
 }

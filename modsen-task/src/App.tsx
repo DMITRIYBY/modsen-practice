@@ -1,46 +1,46 @@
-import { Provider } from 'react-redux';
-import store from './store/store';
 import {Header} from "./components/Header/Header";
 import {InteractiveContainer} from "./components/InteractiveContainer/InteractiveContainer.styles";
 // import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import {Routes, Route} from "react-router-dom";
+import {Routes, Route, useNavigate} from "react-router-dom";
 import {Map} from "./components/Map/Map";
 import {Login} from "./Pages/Login/Login";
-import {Favorites} from "./Pages/Favorites/Favorites";
 import {HeaderFix} from "./components/Header/Header.styles";
 import "./App.css";
 import {Main} from "./Pages/Main/Main";
-
-// import {Login} from "./Pages/Login/Login.tsx";
-
+import {Register} from "./Pages/Register/Register";
+import {Fragment, useEffect} from "react";
+import {useAuth} from "./Hooks/useAuth";
 
 function App() {
-    // const location = useLocation();
 
-    return (
-        <Provider store={store}>
+    const navigate = useNavigate();
+
+    // @ts-ignore
+    const {isAuth} = useAuth();
+
+    useEffect(() => {
+        if(!isAuth){
+            navigate("/login");
+        }
+    }, [isAuth])
+
+    return isAuth ? (
+        <Fragment>
             <Header />
-            {/*<Login />*/}
-            <InteractiveContainer>
+            <InteractiveContainer isShow={true}>
                 <HeaderFix/>
-                {/*<TransitionGroup>*/}
-                    {/*<CSSTransition*/}
-                    {/*    key={location.key}*/}
-                    {/*    classNames="swipe"*/}
-                    {/*    timeout={300} // время анимации в миллисекундах*/}
-                    {/*>*/}
                         <Routes>
-                            <Route path="/" element={<div></div>} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/search" element={<Main />} />
-                            <Route path="/favorites" element={<Favorites />} />
+                            <Route path="/" element={<Main />} />
                         </Routes>
-                {/*    </CSSTransition>*/}
-                {/*</TransitionGroup>*/}
             </InteractiveContainer>
             <Map />
-        </Provider>
-  )
+        </Fragment>
+  ) : (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    );
 }
 
 export default App

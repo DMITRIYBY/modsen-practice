@@ -3,21 +3,24 @@ import {UserState} from "../../constants/types/redux.types";
 
 
 const initialState: UserState = {
-    login: '',
-    password: '',
+    email: null,
+    token: null,
+    id: null
 };
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<{ login: string; password: string }>) => {
-            state.login = action.payload.login;
-            state.password = action.payload.password;
+        setUser: (state, action: PayloadAction<{ email: string, token: string, id: string }>) => {
+            state.email = action.payload.email;
+            state.token = action.payload.token;
+            state.id = action.payload.id;
         },
         clearUser: (state) => {
-            state.login = '';
-            state.password = '';
+            state.email = null;
+            state.token = null;
+            state.id = null;
         }
     }
 });

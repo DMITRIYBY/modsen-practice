@@ -3,10 +3,11 @@ import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 import { MapContainer } from "../../Pages/Main/Main.styles";
 import { WideContainer } from "../../constants/blocks/Blocks";
 import { mapStyles } from "./Map.styles";
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 //@ts-ignore
 import { RootState } from '../app/store';
 import {setPlacesList} from "../../store/reducers/placesSlice";
+import {useTypedSelector} from "../../Hooks/useTypedSelector";
 
 const mapContainerStyle = {
     width: '100%',
@@ -25,7 +26,7 @@ const options = {
 };
 
 export const Map: React.FC = () => {
-    const filters = useSelector((state : RootState) => state.filter);
+    const filters = useTypedSelector((state) => state.filter);
     const dispatch = useDispatch();
 
     const [zoomValue, setZoomValue] = useState<number>(14);

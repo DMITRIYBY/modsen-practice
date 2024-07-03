@@ -7,5 +7,4 @@ export const LoginContainer = styled.div`
   align-items: center;
   gap: 15px;
   width: 90%;
-  height: 100lvh;
 `;
