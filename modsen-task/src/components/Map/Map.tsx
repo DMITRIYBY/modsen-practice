@@ -34,7 +34,7 @@ export const Map: React.FC = () => {
 
     const [mapCenter, setMapCenter] = useState(defaultCenter);
     const [zoomValue, setZoomValue] = useState<number>(14);
-    const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
+    const [currentPlace, setCurrentPlace] = useState<any | null>(null);
     const [places, setPlaces] = useState<Place[]>([]);
     const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
     const [origin, setOrigin] = useState<google.maps.LatLngLiteral | null>(null);
