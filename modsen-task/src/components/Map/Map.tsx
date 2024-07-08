@@ -4,8 +4,6 @@ import { MapContainer } from "../../Pages/Main/Main.styles";
 import { WideContainer } from "../../constants/blocks/Blocks";
 import { mapStyles } from "./Map.styles";
 import {useDispatch} from 'react-redux';
-//@ts-ignore
-import { RootState } from '../app/store';
 import {setPlacesList} from "../../store/reducers/placesSlice";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {MarkersList} from "../../assets/icons/places";

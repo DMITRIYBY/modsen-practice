@@ -9,5 +9,8 @@ interface Place {
             lng: () => number;
         };
     };
+    formatted_address: string | null;
+    user_ratings_total: number | null;
+    rating: number | null;
 }
 

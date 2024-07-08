@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface PlaceDetailsProps {
-    place: google.maps.places.PlaceResult | null;
+    place: Place | null;
 }
 
 export const PlaceInfo: React.FC<PlaceDetailsProps> = ({ place }) => {
@@ -17,7 +17,7 @@ export const PlaceInfo: React.FC<PlaceDetailsProps> = ({ place }) => {
             <p>{user_ratings_total && `Total Ratings: ${user_ratings_total}`}</p>
             {photos && photos.length > 0 && (
                 <img
-                    src={photos[0].getUrl({ maxWidth: 200, maxHeight: 200 })}
+                    src={photos[0].getURI({ maxWidth: 200, maxHeight: 200 })}
                     alt={name}
                 />
             )}
