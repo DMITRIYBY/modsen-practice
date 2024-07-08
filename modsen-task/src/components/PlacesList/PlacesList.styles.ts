@@ -8,9 +8,11 @@ export const PlacesListContainer = styled.div<{width: string}>`
     justify-content: flex-start;
     align-items: center;
     width: ${props => props.width};
-    height: 100lvh;
+    height: 70lvh;
     padding: 20px;
     gap: 20px;
+    border: 2px solid grey;
+    border-radius: 5px;
     background: white;
     overflow-y: auto;
 

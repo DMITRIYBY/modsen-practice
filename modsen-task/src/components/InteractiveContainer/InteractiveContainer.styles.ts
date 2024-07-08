@@ -1,23 +1,33 @@
 import styled from "styled-components";
 
 export const InteractiveContainer = styled.div<{isShow: boolean}>`
-      position: fixed;
-      z-index: 1000;
+      position: static;
       display: ${(props) => (props.isShow ? 'flex' : 'none')};
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
       width: 30%;
-      height: 100%;
+      left: 0;
       padding: 20px;
-      margin-left: 103px;
       background: white;
+
+      @media(max-width: 1440px) {
+        width: 40%;
+      }
   
       @media(max-width: 1024px) {
         width: 50%;
       }
 
-      @media(max-width: 680px) {
+      @media(max-width: 800px) {
         width: 70% ;
       }
+`;
+
+export const ShowContainer = styled.button`
+  width: 15px;
+  height: 40px;
+  border-radius: 5px;
+  background: none;
+  color: white;
 `;

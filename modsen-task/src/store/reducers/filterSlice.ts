@@ -2,21 +2,24 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {FilterState} from "../../constants/types/redux.types";
 
 const initialState: FilterState = {
-    buildingType: '',
+    buildingType: 'restaurant',
     radius: '1000',
+    name: '',
 };
 
 const filterSlice = createSlice({
     name: 'filter',
     initialState,
     reducers: {
-        setFilter: (state, action: PayloadAction<{ buildingType: string; radius: string }>) => {
+        setFilter: (state, action: PayloadAction<{ buildingType: string, radius: string, name: string }>) => {
             state.buildingType = action.payload.buildingType;
             state.radius = action.payload.radius;
+            state.name = action.payload.name;
         },
         clearFilter: (state) => {
             state.buildingType = '';
             state.radius = '';
+            state.name = '';
         }
     }
 });

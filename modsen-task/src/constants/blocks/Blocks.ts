@@ -4,12 +4,13 @@ export const WideContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   justify-content: center;
 `;
 
 export const BorderedInput = styled.input`
   height: 30px;
-  width: 90%;
+  width: 100%;
   font-size: 18px;
   border: 2px solid lightgray;
   border-radius: 5px;
@@ -21,7 +22,25 @@ export const PageContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100lvh;
+  width: 100%;
+  height: 100%;
   background: white;
 `;
+
+export const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  gap: 20px;
+`;
+
+export const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+`;
+

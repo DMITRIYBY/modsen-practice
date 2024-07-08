@@ -7,8 +7,13 @@ export interface UserState {
 export interface FilterState {
     buildingType: string;
     radius: string;
+    name: string;
 }
 
 export interface PlacesState {
     places: Place[]
+}
+
+export interface FavoritesState {
+    favorites: Place[]
 }

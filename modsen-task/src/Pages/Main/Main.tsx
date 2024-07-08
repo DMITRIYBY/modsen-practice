@@ -1,13 +1,11 @@
 import { Fragment } from "react/jsx-runtime";
 import {Filter} from "../../components/Filter/Filter";
-import {PlacesList} from "../../components/PlacesList/PlacesList";
-import {useAuth} from "../../Hooks/useAuth"
+import {useAuth} from "../../hooks/useAuth"
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 
 export const Main = () => {
     const navigate = useNavigate();
-
     const {isAuth} = useAuth();
 
     useEffect(() => {
@@ -19,7 +17,6 @@ export const Main = () => {
     return (
         <Fragment>
             <Filter />
-            <PlacesList />
         </Fragment>
     );
 

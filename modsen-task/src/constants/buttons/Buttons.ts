@@ -8,6 +8,7 @@ export const BorderedBlackButton = styled.button`
   height: auto;
   background: none;
   border: 2px solid black;
+  border-radius: 5px;
 `;
 
 export const InvisibleButton = styled.button`

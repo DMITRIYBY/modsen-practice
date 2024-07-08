@@ -1,20 +1,16 @@
 import styled from 'styled-components';
 
 export const HeaderContainer = styled.header`
-    position: fixed;
-    z-index: 1000;
+    position: static;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     width: 40px;
-    height: 100lvh;
+    left: 0;
     padding: 30px;
     gap: 15px;
     background: white;
-    border-bottom: 1px solid grey;
-    box-shadow: 0px 3px 2px 2px rgba(0, 0, 0, 0.1); 
-    margin-bottom: 10px;
     border-right: 3px solid rgba(0,0,0,0.3);
 `;
 
@@ -28,6 +24,7 @@ export const IconicButton = styled.button<{ color: string }>`
   align-items: center;
   width: 50px;
   height: 50px;
+  gap: 10px;
   background: ${props => props.color};
   border: 1px solid grey;
   border-radius: 5px;

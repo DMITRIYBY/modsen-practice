@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {BorderedInput, PageContainer} from "../../constants/blocks/Blocks";
+import {BorderedInput, FlexColumn, FlexRow, PageContainer} from "../../constants/blocks/Blocks";
 import {BorderedBlackButton} from "../../constants/buttons/Buttons";
 import {H1Black, TextBlack18px} from "../../constants/fonts/Fonts";
 import {useDispatch} from "react-redux";
@@ -7,6 +7,7 @@ import {LoginContainer} from "./Login.styles";
 import {Link, useNavigate} from "react-router-dom";
 import {signInUser} from "../../firebase";
 import {setUser} from "../../store/reducers/userSlice";
+import mappieLogo from "../../assets/icons/mappieLogo.svg";
 
 
 export const Login = () => {
@@ -36,9 +37,11 @@ export const Login = () => {
     return (
                 <PageContainer>
                     <LoginContainer>
-                        <H1Black>Welcome to Modsen Maps</H1Black>
-                        <form onSubmit={handleSubmitLogin}>
-                            <LoginContainer>
+                        <FlexRow>
+                            <H1Black>Welcome to Modsen Maps</H1Black>
+                            <img src={mappieLogo} />
+                        </FlexRow>
+                            <FlexColumn>
                                 <BorderedInput
                                     type="text"
                                     placeholder="Login"
@@ -52,14 +55,13 @@ export const Login = () => {
                                     onChange={(e) => setPassword(e.target.value)}
 
                                 />
-                            <BorderedBlackButton type="submit">
+                            <BorderedBlackButton onClick={handleSubmitLogin} style={{width: '100%'}}>
                                 <TextBlack18px>Login</TextBlack18px>
                             </BorderedBlackButton>
                             <Link to={'/register'}>
                                 <TextBlack18px>Register...</TextBlack18px>
                             </Link>
-                        </LoginContainer>
-                        </form>
+                        </FlexColumn>
                     </LoginContainer>
             </PageContainer>
     );

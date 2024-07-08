@@ -6,4 +6,5 @@ export const MapContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
+  max-height: 100%;
 `;

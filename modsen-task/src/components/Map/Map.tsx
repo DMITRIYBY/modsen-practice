@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+import {GoogleMap, useLoadScript, Marker, DirectionsRenderer, InfoWindow} from '@react-google-maps/api';
 import { MapContainer } from "../../Pages/Main/Main.styles";
 import { WideContainer } from "../../constants/blocks/Blocks";
 import { mapStyles } from "./Map.styles";
@@ -7,7 +7,12 @@ import {useDispatch} from 'react-redux';
 //@ts-ignore
 import { RootState } from '../app/store';
 import {setPlacesList} from "../../store/reducers/placesSlice";
-import {useTypedSelector} from "../../Hooks/useTypedSelector";
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {MarkersList} from "../../assets/icons/places";
+import {IconicButton} from "../Header/Header.styles";
+import goIcon from "../../assets/icons/goIcon.png";
+import myLocationIcon from "../../assets/icons/myLocationIcon.svg";
+import {PlaceInfo} from "../PlaceInfo/PlaceInfo";
 
 const mapContainerStyle = {
     width: '100%',
@@ -29,28 +34,80 @@ export const Map: React.FC = () => {
     const filters = useTypedSelector((state) => state.filter);
     const dispatch = useDispatch();
 
+    const [mapCenter, setMapCenter] = useState(defaultCenter);
     const [zoomValue, setZoomValue] = useState<number>(14);
-    const [currentPlace, setCurrentPlace] = useState<Place>();
+    const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
     const [places, setPlaces] = useState<Place[]>([]);
+    const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
+    const [origin, setOrigin] = useState<google.maps.LatLngLiteral | null>(null);
 
+    const markers = MarkersList;
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyAolfS_257dQALVWlt3TGxcUNJYMKszpe4',
+        googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
         libraries: ['places'],
     });
 
+    const handleGetRoute = (place: Place) => {
+        if (place.geometry?.location) {
+            const destination = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
+
+            setOrigin(mapCenter);
+
+            const request: google.maps.DirectionsRequest = {
+                origin: origin!,
+                destination: destination,
+                travelMode: google.maps.TravelMode.WALKING
+            };
+
+            const directionsService = new google.maps.DirectionsService();
+            directionsService.route(request, (result, status) => {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    setDirections(result);
+                } else {
+                    console.error('Error fetching directions:', status);
+                }
+            });
+        }
+    };
+    const handleGetRouteCurried = (place: Place)  => () => handleGetRoute(place);
+    const handleDeleteRoute = () => setDirections(null);
+
     useEffect(() => {
+
+        try{
+            navigator.geolocation.getCurrentPosition(function (position) {
+                setMapCenter({lat: position.coords.latitude, lng: position.coords.longitude});
+            });
+        } catch (e){
+            console.log(e);
+        }
+
         if (isLoaded) {
             const service = new google.maps.places.PlacesService(
                 document.createElement('div')
             );
 
-            let request = {
-                location: defaultCenter,
-                radius: filters.radius,
-                type: [filters.buildingType]
+            const queryParts = [];
+            if (filters.name) {
+                queryParts.push(filters.name);
+            }
+            if (filters.buildingType) {
+                queryParts.push(filters.buildingType);
+            }
+
+            const query = queryParts.join(' ');
+
+            const request = {
+                query: query,
+                location: mapCenter,
+                radius: filters.radius
             };
+
             // @ts-ignore
-            service.nearbySearch(request, (results: Place[], status: google.maps.places.PlacesServiceStatus) => {
+            service.textSearch(request, (results: Place[], status: google.maps.places.PlacesServiceStatus) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
                     setPlaces(results);
                     dispatch(setPlacesList(results));
@@ -59,9 +116,9 @@ export const Map: React.FC = () => {
                 }
             });
 
+            console.log(mapCenter);
         }
-
-    }, [isLoaded, filters]);
+    }, [isLoaded, filters, directions]);
 
 
     useEffect(() => {
@@ -86,27 +143,67 @@ export const Map: React.FC = () => {
                                 lat: currentPlace.geometry.location.lat(),
                                 lng: currentPlace.geometry.location.lng(),
                             }
-                            : defaultCenter
+                            : mapCenter
                     }
                     options={options}
                 >
-                    {places.map((place, index) => (
-                        <Marker
-                            key={index}
-                            position={{
-                                lat: place.geometry.location.lat(),
-                                lng: place.geometry.location.lng(),
-                            }}
-                            // icon={{
-                            //     url: place.photos && place.photos.length > 0 && typeof place.photos[0].getURI === 'function'
-                            //         ? place.photos[0].getURI({ maxWidth: 50, maxHeight: 50 })
-                            //         : '',
-                            //     scaledSize: new window.google.maps.Size(50, 50),
-                            // }}
-                            onClick={() => setCurrentPlace(place)}
-                        />
+                    <Marker
+                        position={{
+                            lat: mapCenter.lat,
+                            lng: mapCenter.lng
+                        }}
+                        icon={{
+                            url: myLocationIcon,
+                            scaledSize: new window.google.maps.Size(20, 20)
+                        }}
+                    />
+                    {directions && <DirectionsRenderer directions={directions} />}
+                    {places.map((place, index) => {
+                        const placeType = place.types?.[0] || '';
+                        const markerData = markers[placeType];
+                        const url = markerData ? markerData[0] : '';
+                        return (
+                            <Marker
+                                key={index}
+                                position={{
+                                    lat: place.geometry.location.lat(),
+                                    lng: place.geometry.location.lng(),
+                                }}
+                                icon={{
+                                    url: url,
+                                    scaledSize: new window.google.maps.Size(30, 30)
+                                }}
+                                onClick={() => setCurrentPlace(place)}
+                            />
+                        );
+                    })}
+                    {currentPlace && (
+                        <InfoWindow
+                            position={{ lat: currentPlace.geometry?.location?.lat() || 0, lng: currentPlace.geometry?.location?.lng() || 0 }}
+                            onCloseClick={() => setCurrentPlace(null)}
+                        >
+                            <div>
+                                <PlaceInfo place={currentPlace}/>
+                                <IconicButton
+                                    color={'lightgreen'}
+                                    onClick={handleGetRouteCurried(currentPlace)}
+                                    style={{ width: '50%' }}
+                                >
+                                    Построить путь
+                                    <img src={goIcon} alt="" style={{width: '20px', height: '20px'}}/>
+                                </IconicButton>
+                                <IconicButton
+                                    color={'red'}
+                                    onClick={handleDeleteRoute}
+                                    style={{ width: '50%' }}
+                                >
+                                    Отмена
+                                    <img src={goIcon} alt="" style={{width: '20px', height: '20px'}}/>
+                                </IconicButton>
+                            </div>
+                        </InfoWindow>
+                    )}
 
-                    ))}
                 </GoogleMap>
             </MapContainer>
         </WideContainer>
