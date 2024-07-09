@@ -37,6 +37,9 @@ export const PlaceCard = styled.div`
 `;
 
 export const PlaceMineature = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   overflow: hidden;
   border-radius: 5px;
 `;

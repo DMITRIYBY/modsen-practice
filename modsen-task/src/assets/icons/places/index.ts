@@ -6,8 +6,6 @@ import museumIcon from '../places/culture.png';
 import restaurantIcon from '../places/food.png';
 import gasIcon from '../places/gas.png';
 
-
-
 export const MarkersList: { [key: string]: [string, string] } = {
     restaurant: [restaurantIcon, 'Рестораны'],
     park: [natureIcon, 'Парки'],

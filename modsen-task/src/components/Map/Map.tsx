@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {GoogleMap, useLoadScript, Marker, DirectionsRenderer, InfoWindow} from '@react-google-maps/api';
 import { MapContainer } from "../../Pages/Main/Main.styles";
-import { WideContainer } from "../../constants/blocks/Blocks";
+import {FlexRow, WideContainer} from "../../constants/blocks/Blocks";
 import { mapStyles } from "./Map.styles";
 import {useDispatch} from 'react-redux';
 import {setPlacesList} from "../../store/reducers/placesSlice";
@@ -9,8 +9,13 @@ import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {MarkersList} from "../../assets/icons/places";
 import {IconicButton} from "../Header/Header.styles";
 import goIcon from "../../assets/icons/goIcon.png";
+import cancelIcon from "../../assets/icons/cancelIcon.svg";
 import myLocationIcon from "../../assets/icons/myLocationIcon.svg";
+import favoritesIcon from "../../assets/icons/favoritesIcon.svg";
 import {PlaceInfo} from "../PlaceInfo/PlaceInfo";
+import {PlaceInfoContainer} from "../PlaceInfo/PlaceInfo.styles";
+import {toast, Toaster} from "react-hot-toast";
+import {addPlaceToFavorites} from "../../store/actions/favoritesActions";
 
 const mapContainerStyle = {
     width: '100%',
@@ -32,6 +37,7 @@ export const Map: React.FC = () => {
     const filters = useTypedSelector((state) => state.filter);
     const dispatch = useDispatch();
 
+    const user = useTypedSelector((state) => state.user);
     const [mapCenter, setMapCenter] = useState(defaultCenter);
     const [zoomValue, setZoomValue] = useState<number>(14);
     const [currentPlace, setCurrentPlace] = useState<any | null>(null);
@@ -54,24 +60,37 @@ export const Map: React.FC = () => {
 
             setOrigin(mapCenter);
 
-            const request: google.maps.DirectionsRequest = {
-                origin: origin!,
-                destination: destination,
-                travelMode: google.maps.TravelMode.WALKING
-            };
+            if(directions == null) {
 
-            const directionsService = new google.maps.DirectionsService();
-            directionsService.route(request, (result, status) => {
-                if (status === google.maps.DirectionsStatus.OK) {
-                    setDirections(result);
-                } else {
-                    console.error('Error fetching directions:', status);
-                }
-            });
+
+                const request: google.maps.DirectionsRequest = {
+                    origin: origin!,
+                    destination: destination,
+                    travelMode: google.maps.TravelMode.DRIVING
+                };
+
+                const directionsService = new google.maps.DirectionsService();
+                directionsService.route(request, (result, status) => {
+                    if (status === google.maps.DirectionsStatus.OK) {
+                        setDirections(result);
+                    } else {
+                        console.error('Error fetching directions:', status);
+                    }
+                });
+            } else {
+                toast.error(`You already have a route!`)
+            }
         }
     };
     const handleGetRouteCurried = (place: Place)  => () => handleGetRoute(place);
     const handleDeleteRoute = () => setDirections(null);
+
+    const handleAddFavorite = (place: Place) => {
+        // @ts-ignore
+        dispatch(addPlaceToFavorites(user.id, place));
+    }
+
+    const handleAddFavoriteCurried = (place: Place) => () => handleAddFavorite(place)
 
     useEffect(() => {
 
@@ -114,8 +133,10 @@ export const Map: React.FC = () => {
                 }
             });
 
-            console.log(mapCenter);
         }
+
+        console.log(directions)
+
     }, [isLoaded, filters, directions]);
 
 
@@ -131,7 +152,12 @@ export const Map: React.FC = () => {
 
     return (
         <WideContainer>
+            {/*<DirectionInfo direction={directions}/>*/}
             <MapContainer>
+                <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                />
                 <GoogleMap
                     mapContainerStyle={mapContainerStyle}
                     zoom={zoomValue}
@@ -155,7 +181,7 @@ export const Map: React.FC = () => {
                             scaledSize: new window.google.maps.Size(20, 20)
                         }}
                     />
-                    {directions && <DirectionsRenderer directions={directions} />}
+                    {directions && <DirectionsRenderer directions={directions} options={{ suppressMarkers: true }}/>}
                     {places.map((place, index) => {
                         const placeType = place.types?.[0] || '';
                         const markerData = markers[placeType];
@@ -180,28 +206,34 @@ export const Map: React.FC = () => {
                             position={{ lat: currentPlace.geometry?.location?.lat() || 0, lng: currentPlace.geometry?.location?.lng() || 0 }}
                             onCloseClick={() => setCurrentPlace(null)}
                         >
-                            <div>
+                            <PlaceInfoContainer>
                                 <PlaceInfo place={currentPlace}/>
-                                <IconicButton
-                                    color={'lightgreen'}
-                                    onClick={handleGetRouteCurried(currentPlace)}
-                                    style={{ width: '50%' }}
-                                >
-                                    Построить путь
-                                    <img src={goIcon} alt="" style={{width: '20px', height: '20px'}}/>
-                                </IconicButton>
-                                <IconicButton
-                                    color={'red'}
-                                    onClick={handleDeleteRoute}
-                                    style={{ width: '50%' }}
-                                >
-                                    Отмена
-                                    <img src={goIcon} alt="" style={{width: '20px', height: '20px'}}/>
-                                </IconicButton>
-                            </div>
+                                <FlexRow style={{justifyContent: "space-between", width: "100%"}}>
+                                    { directions == null ? ( <IconicButton
+                                        color={'lightgreen'}
+                                        onClick={handleGetRouteCurried(currentPlace)}
+                                        style={{ width: '100%' }}
+                                    >
+                                        Построить путь
+                                        <img src={goIcon} alt="" style={{width: '20px', height: '20px'}}/>
+                                    </IconicButton>
+                                    ) : (
+                                        <IconicButton
+                                            color={'red'}
+                                            onClick={handleDeleteRoute}
+                                            style={{ width: '100%' }}
+                                        >
+                                            Отмена
+                                            <img src={cancelIcon} alt="" style={{width: '20px', height: '20px'}}/>
+                                        </IconicButton>
+                                    )}
+                                        <IconicButton color={'none'} onClick={handleAddFavoriteCurried(currentPlace)}>
+                                            <img src={favoritesIcon} />
+                                        </IconicButton>
+                                </FlexRow>
+                            </PlaceInfoContainer>
                         </InfoWindow>
                     )}
-
                 </GoogleMap>
             </MapContainer>
         </WideContainer>

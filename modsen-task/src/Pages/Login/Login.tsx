@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {BorderedInput, FlexColumn, FlexRow, PageContainer} from "../../constants/blocks/Blocks";
+import {BorderedInput, CenterPageContainer, FlexColumn, FlexRow} from "../../constants/blocks/Blocks";
 import {BorderedBlackButton} from "../../constants/buttons/Buttons";
 import {H1Black, TextBlack18px} from "../../constants/fonts/Fonts";
 import {useDispatch} from "react-redux";
@@ -8,6 +8,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {signInUser} from "../../firebase";
 import {setUser} from "../../store/reducers/userSlice";
 import mappieLogo from "../../assets/icons/mappieLogo.svg";
+import {toast, Toaster} from "react-hot-toast";
 
 
 export const Login = () => {
@@ -28,14 +29,17 @@ export const Login = () => {
                 navigate("/")
             })
             .catch((error) => {
-                const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorCode, errorMessage)
+                toast.error(`Error login: ${errorMessage}`)
             });
     };
 
     return (
-                <PageContainer>
+                <CenterPageContainer>
+                    <Toaster
+                        position="top-center"
+                        reverseOrder={false}
+                    />
                     <LoginContainer>
                         <FlexRow>
                             <H1Black>Welcome to Modsen Maps</H1Black>
@@ -63,6 +67,6 @@ export const Login = () => {
                             </Link>
                         </FlexColumn>
                     </LoginContainer>
-            </PageContainer>
+            </CenterPageContainer>
     );
 }

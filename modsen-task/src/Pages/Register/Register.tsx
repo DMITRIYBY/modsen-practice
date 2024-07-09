@@ -1,7 +1,5 @@
 import { useState } from "react";
-// import { useSelector, useDispatch } from 'react-redux';
-// import { setUser } from '../../store/reducers/userSlice';
-import {BorderedInput, FlexColumn, FlexRow, PageContainer} from "../../constants/blocks/Blocks";
+import {BorderedInput, CenterPageContainer, FlexColumn, FlexRow} from "../../constants/blocks/Blocks";
 import {BorderedBlackButton} from "../../constants/buttons/Buttons";
 import {H1Black, TextBlack18px} from "../../constants/fonts/Fonts";
 import {LoginContainer} from "../Login/Login.styles";
@@ -10,6 +8,7 @@ import {createUser} from "../../firebase";
 import {useDispatch} from "react-redux";
 import {setUser} from "../../store/reducers/userSlice";
 import mappieLogo from "../../assets/icons/mappieLogo.svg";
+import {toast, Toaster} from "react-hot-toast";
 
 
 export const Register = () => {
@@ -19,7 +18,6 @@ export const Register = () => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [copyPassword, setCopyPassword] = useState('');
-    // const user = useSelector((state : any) => state.user);
 
     const handleSubmitRegister = async () => {
         if (password === copyPassword) {
@@ -31,15 +29,21 @@ export const Register = () => {
                 dispatch(setUser({ email: user.email ? user.email : '' , token: user.accessToken, id: user.uid }));
                 navigate("/")
             } catch (error) {
-                console.error("Error creating user:", error);
+                // @ts-ignore
+                const errorMessage = error.message;
+                toast.error(`Error creating user: ${errorMessage}`)
             }
         } else {
-            console.error("Passwords do not match.");
+            toast.error(`Error creating user: password don't match!`)
         }
     };
 
     return (
-        <PageContainer>
+        <CenterPageContainer>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             <LoginContainer>
                 <FlexRow>
                     <H1Black>Welcome to Modsen Maps</H1Black>
@@ -74,6 +78,6 @@ export const Register = () => {
                     </Link>
                 </FlexColumn>
             </LoginContainer>
-        </PageContainer>
+        </CenterPageContainer>
     );
 }

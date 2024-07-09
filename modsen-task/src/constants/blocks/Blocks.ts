@@ -27,6 +27,9 @@ export const PageContainer = styled.div`
   background: white;
 `;
 
+export const CenterPageContainer = styled(PageContainer)`
+    height: 100svh;
+`;
 export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;

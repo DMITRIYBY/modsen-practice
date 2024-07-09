@@ -7,6 +7,7 @@ export const H1Black = styled.h1`
   font-style: normal;
   font-weight: 500;
   text-decoration: none;
+  line-height: 0.8;
 `;
 
 export const TextBlack18px = styled.p`
@@ -17,4 +18,15 @@ export const TextBlack18px = styled.p`
   font-weight: 400;
   text-decoration: none;
   line-height: normal;
+`;
+
+export const DefaultBlackText = styled.p`
+  color: black;
+  font-size: 16px;
+  font-family: "Rubik", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  text-decoration: none;
+  line-height: normal;
+  height: 16px;
 `;

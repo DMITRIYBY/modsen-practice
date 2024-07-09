@@ -12,5 +12,6 @@ interface Place {
     formatted_address: string | null;
     user_ratings_total: number | null;
     rating: number | null;
+    place_id: string;
 }
 
